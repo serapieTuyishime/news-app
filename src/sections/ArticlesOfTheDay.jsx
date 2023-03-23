@@ -1,27 +1,14 @@
-import React from "react";
 import { useSelector } from "react-redux";
-import { useLazyGetNewsByDomainQuery } from "../Services/news";
-
+import { useGetPopuralArticlesQuery } from "../Services/news";
 import NewsItem from "../components/NewsItem";
 
-const News = () => {
+const ArticlesOfTheDay = () => {
     const allNewsUrl = useSelector((state) => state.news.allNewsUrl);
-
-    const [trigger, AllNews, lastPromiseInfo] = useLazyGetNewsByDomainQuery();
-
+    const AllNews = useGetPopuralArticlesQuery(allNewsUrl);
     return (
-        <>
-            {AllNews.status === "uninitialized" ? (
-                <button
-                    className="px-4 py-2 bg-red-400 rounded-md"
-                    onClick={() => trigger(allNewsUrl)}
-                >
-                    Fetch Posts
-                </button>
-            ) : null}
+        <div>
             {AllNews.status === "fulfilled" ? (
                 <div className="flex flex-wrap gap-4">
-                    {/* {JSON.stringify(AllNews.data)} */}
                     {Object.values(AllNews.data.articles)
                         .slice(0, 10)
                         .map(
@@ -54,8 +41,8 @@ const News = () => {
             ) : (
                 <div className="text-4xl font-bold">Rejected</div>
             )}
-        </>
+        </div>
     );
 };
 
-export default News;
+export default ArticlesOfTheDay;
